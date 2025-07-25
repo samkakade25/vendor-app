@@ -1,7 +1,6 @@
 import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import { NextAuthOptions } from "next-auth";
-import { Session } from "next-auth";
 
 declare module "next-auth" {
   interface Session {
@@ -14,7 +13,7 @@ declare module "next-auth" {
   }
 }
 
-export const authOptions: NextAuthOptions = {
+const authOptions: NextAuthOptions = {
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
@@ -42,6 +41,8 @@ export const authOptions: NextAuthOptions = {
   debug: true, // Enable debug mode for detailed logs
 };
 
+// Use NextAuth with the authOptions
 const handler = NextAuth(authOptions);
 
+// Export the handler for GET and POST requests
 export { handler as GET, handler as POST };
