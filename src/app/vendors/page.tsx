@@ -40,9 +40,23 @@ export async function deleteVendor(id: number) {
   return res.json();
 }
 
+// Define a type for Vendor
+type Vendor = {
+  id: number;
+  vendorName: string;
+  bankAccountNo: string;
+  bankName: string;
+  addressLine1: string;
+  addressLine2: string;
+  city: string;
+  country: string;
+  zipCode: string;
+};
+
 export default function VendorPage() {
-  const [vendors, setVendors] = useState<any[]>([]);
-  const [editingVendor, setEditingVendor] = useState<any | null>(null); // State for editing
+  // Update state types
+  const [vendors, setVendors] = useState<Vendor[]>([]);
+  const [editingVendor, setEditingVendor] = useState<Vendor | null>(null);
   const [form, setForm] = useState({
     vendorName: "",
     bankAccountNo: "",
@@ -94,8 +108,9 @@ export default function VendorPage() {
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!editingVendor) return;
     try {
-      await editVendor(editingVendor.id, form);
+      await editVendor(String(editingVendor.id), form);
       alert("Vendor updated successfully");
       setVendors((prev) =>
         prev.map((v) => (v.id === editingVendor.id ? { ...v, ...form } : v))
