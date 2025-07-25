@@ -13,7 +13,7 @@ declare module "next-auth" {
   }
 }
 
-const authOptions: NextAuthOptions = {
+export const authOptions: NextAuthOptions = {
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
@@ -22,12 +22,12 @@ const authOptions: NextAuthOptions = {
   ],
   secret: process.env.NEXTAUTH_SECRET,
   session: {
-    strategy: "jwt", // Use JSON Web Tokens for session management
+    strategy: "jwt",
   },
   callbacks: {
     async session({ session, token }) {
       if (session.user) {
-        session.user.id = token.sub; // Ensure user ID is added to the session
+        session.user.id = token.sub;
       }
       return session;
     },
@@ -38,8 +38,12 @@ const authOptions: NextAuthOptions = {
       return token;
     },
   },
-  debug: true, // Enable debug mode for detailed logs
+  debug: true,
 };
 
-// Export the NextAuth handler directly
-export default NextAuth(authOptions);
+// Create the auth handler
+const handler = NextAuth(authOptions);
+
+// Export the GET and POST handlers separately
+export const GET = handler.GET;
+export const POST = handler.POST;
